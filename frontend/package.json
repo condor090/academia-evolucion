@@ -1,0 +1,42 @@
+{
+  "name": "academia-evolucion-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@react-three/postprocessing": "^2.19.1",
+    "@types/three": "^0.158.3",
+    "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.12.0",
+    "next": "14.0.0",
+    "react": "^18.2.0",
+    "react-confetti": "^6.1.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.0",
+    "react-hot-toast": "^2.4.0",
+    "react-intersection-observer": "^9.4.0",
+    "react-markdown": "^8.0.0",
+    "recharts": "^2.7.0",
+    "three": "^0.158.0",
+    "zustand": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "14.0.0",
+    "typescript": "^5.0.0"
+  }
+}
