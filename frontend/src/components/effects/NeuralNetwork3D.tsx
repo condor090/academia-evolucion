@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Float, Environment, Text, Line } from '@react-three/drei'
-import { EffectComposer, Bloom, ChromaticAberration } from '@react-three/postprocessing'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { theme } from '@/styles/theme'
 
@@ -21,22 +21,22 @@ function NeuralParticles({ isInView }: { isInView: boolean }) {
   const { mouse } = useThree()
   
   const [particles, setParticles] = useState<Particle[]>([])
-  const particleCount = 20
+  const particleCount = 30 // Aumentado de 20 a 30 para mejor distribución
   
   // Inicializar partículas
   useEffect(() => {
     const newParticles: Particle[] = []
     
-    // Nodos principales (centro)
+    // Nodos principales (centro) - Expandidos
     for (let i = 0; i < 3; i++) {
       const angle = (i / 3) * Math.PI * 2
-      const radius = 1
+      const radius = 1.5 // Aumentado de 1 a 1.5
       newParticles.push({
         id: i,
         position: new THREE.Vector3(
           Math.cos(angle) * radius,
           Math.sin(angle) * radius,
-          (Math.random() - 0.5) * 0.5
+          (Math.random() - 0.5) * 1 // Aumentado de 0.5 a 1
         ),
         velocity: new THREE.Vector3(
           (Math.random() - 0.5) * 0.01,
@@ -45,17 +45,17 @@ function NeuralParticles({ isInView }: { isInView: boolean }) {
         ),
         connections: [],
         isMain: true,
-        size: 0.15,
+        size: 0.2, // Aumentado de 0.15 a 0.2
         intensity: 1
       })
     }
     
-    // Nodos secundarios
+    // Nodos secundarios - Área expandida
     for (let i = 3; i < particleCount; i++) {
       const position = new THREE.Vector3(
-        (Math.random() - 0.5) * 4,
-        (Math.random() - 0.5) * 4,
-        (Math.random() - 0.5) * 2
+        (Math.random() - 0.5) * 8, // Aumentado de 4 a 8
+        (Math.random() - 0.5) * 8, // Aumentado de 4 a 8
+        (Math.random() - 0.5) * 4  // Aumentado de 2 a 4
       )
       
       newParticles.push({
@@ -68,7 +68,7 @@ function NeuralParticles({ isInView }: { isInView: boolean }) {
         ),
         connections: [],
         isMain: false,
-        size: 0.08,
+        size: 0.1, // Aumentado de 0.08 a 0.1
         intensity: 0.7
       })
     }
@@ -89,7 +89,7 @@ function NeuralParticles({ isInView }: { isInView: boolean }) {
         for (let i = 0; i < updated.length; i++) {
           for (let j = i + 1; j < updated.length; j++) {
             const distance = updated[i].position.distanceTo(updated[j].position)
-            const maxDistance = (updated[i].isMain || updated[j].isMain) ? 2.5 : 1.8
+            const maxDistance = (updated[i].isMain || updated[j].isMain) ? 3.5 : 2.5 // Aumentado de 2.5/1.8 a 3.5/2.5
             
             if (distance < maxDistance) {
               updated[i].connections.push(j)
@@ -123,20 +123,20 @@ function NeuralParticles({ isInView }: { isInView: boolean }) {
         particle.position.add(direction.multiplyScalar(0.002))
       }
       
-      // Límites
+      // Límites expandidos
       ['x', 'y', 'z'].forEach(axis => {
-        const limit = axis === 'z' ? 1.5 : 2.5
+        const limit = axis === 'z' ? 3 : 5 // Aumentado de 1.5/2.5 a 3/5
         if (Math.abs(particle.position[axis as 'x' | 'y' | 'z']) > limit) {
           particle.velocity[axis as 'x' | 'y' | 'z'] *= -1
         }
       })
       
-      // Influencia del mouse
-      const mouseInfluence = new THREE.Vector3(mouse.x * 2, mouse.y * 2, 0)
+      // Influencia del mouse expandida
+      const mouseInfluence = new THREE.Vector3(mouse.x * 4, mouse.y * 4, 0) // Aumentado de 2 a 4
       const mouseDistance = particle.position.distanceTo(mouseInfluence)
-      if (mouseDistance < 2) {
+      if (mouseDistance < 3) { // Aumentado de 2 a 3
         const repulsion = particle.position.clone().sub(mouseInfluence).normalize()
-        particle.position.add(repulsion.multiplyScalar(0.02 * (1 - mouseDistance / 2)))
+        particle.position.add(repulsion.multiplyScalar(0.02 * (1 - mouseDistance / 3)))
       }
       
       // Actualizar instancia
@@ -180,20 +180,18 @@ function NeuralParticles({ isInView }: { isInView: boolean }) {
             const target = particles[targetId]
             if (!target) return null
             
-            const points = [particle.position, target.position]
-            const geometry = new THREE.BufferGeometry().setFromPoints(points)
             const distance = particle.position.distanceTo(target.position)
-            const opacity = Math.max(0.1, 1 - distance / 2.5) * 0.5
+            const opacity = Math.max(0.1, 1 - distance / 3.5) * 0.5 // Ajustado para nuevo tamaño
             
             return (
-              <line key={`${i}-${targetId}`} geometry={geometry}>
-                <lineBasicMaterial 
-                  color="#FFD700" 
-                  transparent 
-                  opacity={opacity}
-                  linewidth={particle.isMain || target.isMain ? 2 : 1}
-                />
-              </line>
+              <Line
+                key={`${i}-${targetId}`}
+                points={[particle.position, target.position]}
+                color="#FFD700"
+                transparent
+                opacity={opacity}
+                lineWidth={particle.isMain || target.isMain ? 2 : 1}
+              />
             )
           })
         )}
@@ -235,12 +233,12 @@ function QuestionParticles({ isInView }: { isInView: boolean }) {
     
     const time = state.clock.getElapsedTime()
     
-    // Órbita alrededor del centro
-    const radius = 2.5 + Math.sin(time * 0.5) * 0.2
+    // Órbita alrededor del centro - Radio expandido
+    const radius = 4.5 + Math.sin(time * 0.5) * 0.3 // Aumentado de 2.5 a 4.5
     const speed = 0.3
     groupRef.current.position.x = Math.cos(time * speed) * radius
     groupRef.current.position.z = Math.sin(time * speed) * radius
-    groupRef.current.position.y = Math.sin(time * 0.5) * 0.5
+    groupRef.current.position.y = Math.sin(time * 0.5) * 1 // Aumentado de 0.5 a 1
     
     // Siempre mirar al centro
     groupRef.current.lookAt(0, 0, 0)
@@ -269,11 +267,11 @@ function QuestionParticles({ isInView }: { isInView: boolean }) {
   return (
     <group ref={groupRef}>
       <Text
-        fontSize={0.25}
+        fontSize={0.35} // Aumentado de 0.25 a 0.35 para mejor visibilidad
         color="#FFD700"
         anchorX="center"
         anchorY="middle"
-        maxWidth={4}
+        maxWidth={6} // Aumentado de 4 a 6
         textAlign="center"
         font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hjp-Ek-_EeA.woff"
         letterSpacing={0.02}
@@ -291,9 +289,9 @@ function QuestionParticles({ isInView }: { isInView: boolean }) {
       
       {/* Partículas decorativas alrededor del texto */}
       <group ref={particlesRef}>
-        {[...Array(8)].map((_, i) => {
-          const angle = (i / 8) * Math.PI * 2
-          const particleRadius = 0.8
+        {[...Array(12)].map((_, i) => { // Aumentado de 8 a 12 partículas
+          const angle = (i / 12) * Math.PI * 2
+          const particleRadius = 1.2 // Aumentado de 0.8 a 1.2
           return (
             <Float
               key={i}
@@ -323,10 +321,10 @@ function QuestionParticles({ isInView }: { isInView: boolean }) {
         })}
       </group>
       
-      {/* Línea conectora al núcleo */}
+      {/* Línea conectora al núcleo - Ajustada al nuevo tamaño */}
       {opacity > 0 && (
         <mesh>
-          <cylinderGeometry args={[0.005, 0.005, 2.5, 8]} />
+          <cylinderGeometry args={[0.008, 0.008, 4.5, 8]} /> {/* Aumentado de 0.005/2.5 a 0.008/4.5 */}
           <meshBasicMaterial
             color="#FFD700"
             transparent
@@ -348,15 +346,15 @@ function SophiaCore() {
     // Rotación suave
     meshRef.current.rotation.y = time * 0.2
     
-    // Pulso
-    const scale = 1 + Math.sin(time * 2) * 0.1
+    // Pulso más sutil para el tamaño original
+    const scale = 1 + Math.sin(time * 2) * 0.1 // Regresado de 1.2 a 1 base
     meshRef.current.scale.setScalar(scale)
   })
   
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
       <mesh ref={meshRef}>
-        <sphereGeometry args={[1, 32, 32]} />
+        <sphereGeometry args={[1, 32, 32]} /> {/* Regresado de 1.5 a 1 - tamaño original */}
         <meshStandardMaterial
           color="#FFD700"
           emissive="#FFD700"
@@ -366,8 +364,8 @@ function SophiaCore() {
         />
       </mesh>
       
-      {/* Halo exterior */}
-      <mesh scale={[1.5, 1.5, 1.5]}>
+      {/* Halo exterior - También ajustado proporcionalmente */}
+      <mesh scale={[1.5, 1.5, 1.5]}> {/* Regresado de 2.2 a 1.5 */}
         <sphereGeometry args={[1, 32, 32]} />
         <meshBasicMaterial
           color="#FFD700"
@@ -401,7 +399,7 @@ export default function NeuralNetwork3D({ isInView }: NeuralNetwork3DProps) {
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 60 }}
+        camera={{ position: [0, 0, 10], fov: 75 }} // Cámara más alejada (de 5 a 10) y FOV más amplio (de 60 a 75)
         gl={{ 
           antialias: true,
           alpha: true,
@@ -430,10 +428,6 @@ export default function NeuralNetwork3D({ isInView }: NeuralNetwork3DProps) {
             luminanceSmoothing={0.9}
             intensity={1.5}
             radius={0.8}
-          />
-          <ChromaticAberration
-            offset={[0.002, 0.002]}
-            radialModulation={false}
           />
         </EffectComposer>
       </Canvas>

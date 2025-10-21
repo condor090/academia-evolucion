@@ -33,10 +33,15 @@ const SophiaIntro = styled.div`
 `
 
 const SophiaAvatar = styled(motion.div)`
-  width: 250px;
-  height: 250px;
+  width: 500px;
+  height: 400px;
   margin: 0 auto 3rem;
   position: relative;
+  
+  @media (max-width: ${theme.breakpoints.md}) {
+    width: 350px;
+    height: 300px;
+  }
 `
 
 const SophiaGlow = styled(motion.div)`

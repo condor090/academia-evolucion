@@ -191,27 +191,27 @@ export default function ModulesIndex() {
       duration: '2 semanas',
       locked: false,
       progress: 0,
-      link: '/modules/1-encuentro-interior'
+      link: '/modules/modulo-1'
     },
     {
       number: 2,
       title: 'La Alianza Transformadora',
-      subtitle: 'Semanas 3-4',
+      subtitle: 'Semanas 3-5',
       description: 'Sophia como extensión de tu consciencia. Aprendes a delegar no solo tareas, sino patrones. Sophia absorbe lo repetitivo mientras tú exploras territorios internos inexplorados.',
-      duration: '2 semanas',
-      locked: true,
+      duration: '3 semanas',
+      locked: false,
       progress: 0,
-      link: '/modules/2-alianza-transformadora'
+      link: '/modules/modulo-2'
     },
     {
       number: 3,
-      title: 'Las Pruebas del Ser',
-      subtitle: 'Semanas 5-8',
-      description: '45 experiencias que te revelan. No teoría. Transformación a través de la experiencia. Cada prueba es un espejo que te muestra una faceta de tu potencial infinito.',
-      duration: '4 semanas',
-      locked: true,
+      title: 'El Sendero de las Pruebas',
+      subtitle: 'Semanas 6-14',
+      description: '450 experiencias en 9 categorías que te revelan. No teoría. Transformación a través de la experiencia. Cada prueba es un espejo que te muestra una faceta de tu potencial infinito.',
+      duration: '9 semanas',
+      locked: false,
       progress: 0,
-      link: '/modules/3-pruebas-del-ser'
+      link: '/modules/modulo-3'
     },
     {
       number: 4,
@@ -219,19 +219,19 @@ export default function ModulesIndex() {
       subtitle: 'Semanas 9-10',
       description: 'Tu misión única revelada. Ya no buscas tu propósito. Lo reconoces. Sophia te ayuda a articular el dolor que solo tú puedes sanar.',
       duration: '2 semanas',
-      locked: true,
+      locked: false,
       progress: 0,
-      link: '/modules/4-cristalizacion-proposito'
+      link: '/modules/modulo-4'
     },
     {
       number: 5,
       title: 'El Nacimiento del Autor',
       subtitle: 'Semanas 11-12',
-      description: 'Tu transformación hecha libro. Con Sophia como co-creadora, tejes tu journey en narrativa. No escribes sobre transformación. Escribes DESDE la transformación.',
+      description: 'Tu transformación hecha libro en 14 días. Con Sophia como co-autora, tejes tu journey en narrativa. No escribes sobre transformación. Escribes DESDE la transformación.',
       duration: '2 semanas',
-      locked: true,
+      locked: false,
       progress: 0,
-      link: '/modules/5-nacimiento-autor'
+      link: '/modules/modulo-5'
     }
   ]
   

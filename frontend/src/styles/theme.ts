@@ -2,6 +2,7 @@ export const theme = {
   colors: {
     primary: {
       gold: '#FFD700',
+      goldLight: '#FFED4B',
       darkGold: '#B8860B',
       lightGold: 'rgba(255, 215, 0, 0.1)',
     },
@@ -11,6 +12,7 @@ export const theme = {
       lightBlack: '#0F0F0F',
     },
     text: {
+      primary: '#FFFFFF',
       white: '#FFFFFF',
       lightWhite: 'rgba(255, 255, 255, 0.8)',
       dimWhite: 'rgba(255, 255, 255, 0.6)',
@@ -33,7 +35,9 @@ export const theme = {
     goldPrimary: 'linear-gradient(135deg, #B8860B 0%, #FFD700 100%)',
     goldRadial: 'radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%)',
     blackFade: 'linear-gradient(180deg, #000000 0%, #0A0A0A 100%)',
+    darkToBlack: 'linear-gradient(180deg, #0A0A0A 0%, #000000 100%)',
     heroGlow: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.1) 0%, #000000 60%)',
+    radialGold: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.15) 0%, #000000 60%)',
   },
   fonts: {
     primary: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',

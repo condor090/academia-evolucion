@@ -177,16 +177,80 @@ const MobileMenuButton = styled.button`
   gap: 4px;
   background: transparent;
   cursor: pointer;
-  
+
   @media (max-width: ${theme.breakpoints.md}) {
     display: flex;
   }
-  
+
   span {
     width: 24px;
     height: 2px;
     background: ${theme.colors.primary.gold};
     transition: all 0.3s ease;
+  }
+`
+
+const DropdownWrapper = styled.div`
+  position: relative;
+`
+
+const DropdownTrigger = styled.button<{ active?: boolean }>`
+  color: ${props => props.active
+    ? theme.colors.primary.gold
+    : theme.colors.text.lightWhite};
+  font-weight: ${props => props.active ? '500' : '400'};
+  transition: all 0.3s ease;
+  position: relative;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  &:hover {
+    color: ${theme.colors.primary.gold};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: ${props => props.active ? '100%' : '0'};
+    height: 2px;
+    background: ${theme.gradients.goldPrimary};
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+`
+
+const DropdownContent = styled(motion.div)`
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 0;
+  background: ${theme.colors.background.darkGray};
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 200px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+`
+
+const DropdownLink = styled(Link)`
+  display: block;
+  padding: 1rem 1.5rem;
+  color: ${theme.colors.text.lightWhite};
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: ${theme.colors.primary.gold};
   }
 `
 
@@ -196,6 +260,7 @@ export const Navigation: React.FC = () => {
   const [scrolled, setScrolled] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showHerramientasDropdown, setShowHerramientasDropdown] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -217,20 +282,46 @@ export const Navigation: React.FC = () => {
         </Logo>
 
         <NavLinks>
-          <NavLink href="/journey" active={isActive('/journey')}>
-            El Journey
+          <NavLink href="/academia" active={isActive('/academia')}>
+            Academia
           </NavLink>
-          <NavLink href="/modules" active={isActive('/modules')}>
-            Módulos
+
+          <DropdownWrapper
+            onMouseEnter={() => setShowHerramientasDropdown(true)}
+            onMouseLeave={() => setShowHerramientasDropdown(false)}
+          >
+            <DropdownTrigger active={router.pathname.startsWith('/herramientas')}>
+              Herramientas
+              <span style={{ fontSize: '0.7rem' }}>▼</span>
+            </DropdownTrigger>
+
+            <AnimatePresence>
+              {showHerramientasDropdown && (
+                <DropdownContent
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <DropdownLink href="/herramientas/cortex">
+                    🧠 CORTEX
+                  </DropdownLink>
+                  <DropdownLink href="/herramientas/sophia">
+                    👁️ Sophia
+                  </DropdownLink>
+                </DropdownContent>
+              )}
+            </AnimatePresence>
+          </DropdownWrapper>
+
+          <NavLink href="/empresas" active={isActive('/empresas')}>
+            Para Empresas
           </NavLink>
-          <NavLink href="/sophia" active={isActive('/sophia')}>
-            Conoce a Sophia
+          <NavLink href="/nosotros" active={isActive('/nosotros')}>
+            Nosotros
           </NavLink>
-          <NavLink href="/testimonios" active={isActive('/testimonios')}>
-            Transformaciones
-          </NavLink>
-          <NavLink href="/inversion" active={isActive('/inversion')}>
-            Inversión
+          <NavLink href="/inscripcion" active={isActive('/inscripcion')}>
+            Inscripción
           </NavLink>
         </NavLinks>
 
@@ -270,8 +361,8 @@ export const Navigation: React.FC = () => {
               <Button variant="secondary" onClick={() => router.push('/login')}>
                 Iniciar Sesión
               </Button>
-              <Button variant="primary" onClick={() => router.push('/comenzar')}>
-                Comenzar Journey
+              <Button variant="primary" onClick={() => router.push('/inscripcion')}>
+                Iniciar Journey
               </Button>
             </>
           )}
