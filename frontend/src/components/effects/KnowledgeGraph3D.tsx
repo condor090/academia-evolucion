@@ -1,60 +1,199 @@
 import React, { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
-// Nodo individual del grafo
-function Node({ position, color = '#FFD700' }: { position: [number, number, number], color?: string }) {
-  const meshRef = useRef<THREE.Mesh>(null)
+// Partículas orbitando alrededor de un nodo
+function NodeParticles({ position, color }: { position: [number, number, number], color: string }) {
+  const particlesRef = useRef<THREE.Points>(null)
+
+  const particles = useMemo(() => {
+    const count = 30
+    const positions = new Float32Array(count * 3)
+
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2
+      const radius = 0.3 + Math.random() * 0.2
+      positions[i * 3] = Math.cos(angle) * radius + position[0]
+      positions[i * 3 + 1] = Math.sin(angle) * radius + position[1]
+      positions[i * 3 + 2] = Math.sin(angle * 2) * radius + position[2]
+    }
+
+    return positions
+  }, [position])
 
   useFrame((state) => {
-    if (meshRef.current) {
-      // Pulsación suave
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.1
-      meshRef.current.scale.setScalar(scale)
+    if (particlesRef.current) {
+      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.5
+      particlesRef.current.rotation.z = state.clock.elapsedTime * 0.3
     }
   })
 
   return (
-    <mesh ref={meshRef} position={position}>
-      <sphereGeometry args={[0.15, 32, 32]} />
-      <meshStandardMaterial
+    <points ref={particlesRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={particles.length / 3}
+          array={particles}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.05}
         color={color}
-        emissive={color}
-        emissiveIntensity={0.5}
-        metalness={0.8}
-        roughness={0.2}
+        transparent
+        opacity={0.6}
+        sizeAttenuation
       />
-      {/* Glow effect */}
-      <pointLight color={color} intensity={0.5} distance={2} />
+    </points>
+  )
+}
+
+// Nodo individual del grafo con efectos mejorados
+function Node({ position, color = '#FFD700', planeIndex }: {
+  position: [number, number, number],
+  color?: string,
+  planeIndex?: number
+}) {
+  const meshRef = useRef<THREE.Mesh>(null)
+  const glowRef = useRef<THREE.Mesh>(null)
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      // Pulsación más dramática
+      const scale = 1 + Math.sin(state.clock.elapsedTime * 3 + position[0]) * 0.2
+      meshRef.current.scale.setScalar(scale)
+
+      // Rotación suave
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.5
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.2
+    }
+
+    if (glowRef.current) {
+      const glowScale = 1.5 + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.3
+      glowRef.current.scale.setScalar(glowScale)
+    }
+  })
+
+  // Diferentes geometrías según el plano
+  const geometry = planeIndex === 0 ? (
+    <icosahedronGeometry args={[0.2, 1]} />
+  ) : planeIndex === 1 ? (
+    <octahedronGeometry args={[0.18, 0]} />
+  ) : planeIndex === 2 ? (
+    <dodecahedronGeometry args={[0.16, 0]} />
+  ) : planeIndex === 3 ? (
+    <tetrahedronGeometry args={[0.2, 0]} />
+  ) : (
+    <sphereGeometry args={[0.15, 32, 32]} />
+  )
+
+  return (
+    <group position={position}>
+      {/* Glow exterior */}
+      <mesh ref={glowRef}>
+        <sphereGeometry args={[0.3, 16, 16]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.2}
+        />
+      </mesh>
+
+      {/* Nodo principal */}
+      <mesh ref={meshRef}>
+        {geometry}
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={1.2}
+          metalness={0.9}
+          roughness={0.1}
+          wireframe={Math.random() > 0.7}
+        />
+      </mesh>
+
+      {/* Luz puntual más intensa */}
+      <pointLight color={color} intensity={2} distance={3} decay={2} />
+
+      {/* Partículas orbitando */}
+      <NodeParticles position={[0, 0, 0]} color={color} />
+    </group>
+  )
+}
+
+// Partícula de energía que fluye por la conexión
+function EnergyFlow({ start, end, color, delay = 0 }: {
+  start: [number, number, number],
+  end: [number, number, number],
+  color: string,
+  delay?: number
+}) {
+  const meshRef = useRef<THREE.Mesh>(null)
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      const progress = ((state.clock.elapsedTime + delay) % 2) / 2
+      const x = start[0] + (end[0] - start[0]) * progress
+      const y = start[1] + (end[1] - start[1]) * progress
+      const z = start[2] + (end[2] - start[2]) * progress
+      meshRef.current.position.set(x, y, z)
+    }
+  })
+
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[0.05, 8, 8]} />
+      <meshBasicMaterial color={color} />
+      <pointLight color={color} intensity={1} distance={1} />
     </mesh>
   )
 }
 
-// Conexión entre nodos
-function Connection({ start, end, color = '#FFD700' }: {
+// Conexión entre nodos con flujo de energía
+function Connection({ start, end, color = '#FFD700', index = 0 }: {
   start: [number, number, number],
   end: [number, number, number],
-  color?: string
+  color?: string,
+  index?: number
 }) {
+  const lineRef = useRef<THREE.Line>(null)
+
   const points = useMemo(() => {
     return [new THREE.Vector3(...start), new THREE.Vector3(...end)]
   }, [start, end])
 
-  const lineGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    return geometry
+  const curve = useMemo(() => {
+    return new THREE.CatmullRomCurve3(points)
   }, [points])
 
+  const tubeGeometry = useMemo(() => {
+    return new THREE.TubeGeometry(curve, 20, 0.01, 8, false)
+  }, [curve])
+
+  useFrame((state) => {
+    if (lineRef.current) {
+      const material = lineRef.current.material as THREE.MeshBasicMaterial
+      material.opacity = 0.4 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.2
+    }
+  })
+
   return (
-    <line geometry={lineGeometry}>
-      <lineBasicMaterial
-        color={color}
-        transparent
-        opacity={0.3}
-        linewidth={2}
-      />
-    </line>
+    <group>
+      {/* Tubo de conexión */}
+      <mesh ref={lineRef} geometry={tubeGeometry}>
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.4}
+        />
+      </mesh>
+
+      {/* Partículas de energía fluyendo */}
+      <EnergyFlow start={start} end={end} color={color} delay={index * 0.3} />
+      <EnergyFlow start={start} end={end} color={color} delay={index * 0.3 + 1} />
+    </group>
   )
 }
 
@@ -64,7 +203,7 @@ function KnowledgeGraphScene() {
 
   // Generar nodos en forma de red 3D
   const nodes = useMemo(() => {
-    const nodePositions: Array<{ pos: [number, number, number], color: string }> = []
+    const nodePositions: Array<{ pos: [number, number, number], color: string, planeIndex?: number }> = []
     const colors = [
       '#8A2BE2', // Plano I - Violeta
       '#00CED1', // Plano II - Cyan
@@ -73,8 +212,8 @@ function KnowledgeGraphScene() {
       '#FFD700', // Plano V - Oro brillante
     ]
 
-    // Nodo central
-    nodePositions.push({ pos: [0, 0, 0], color: '#FFD700' })
+    // Nodo central (sin planeIndex específico)
+    nodePositions.push({ pos: [0, 0, 0], color: '#FFD700', planeIndex: undefined })
 
     // 5 grupos de nodos (uno por cada Plano de Claridad)
     for (let plane = 0; plane < 5; plane++) {
@@ -84,7 +223,7 @@ function KnowledgeGraphScene() {
       // Nodo principal del plano
       const x = Math.cos(angle) * radius
       const z = Math.sin(angle) * radius
-      nodePositions.push({ pos: [x, 0, z], color: colors[plane] })
+      nodePositions.push({ pos: [x, 0, z], color: colors[plane], planeIndex: plane })
 
       // Nodos secundarios del plano
       for (let i = 0; i < 3; i++) {
@@ -95,7 +234,8 @@ function KnowledgeGraphScene() {
         const subY = (Math.random() - 0.5) * 1.5
         nodePositions.push({
           pos: [subX, subY, subZ],
-          color: colors[plane]
+          color: colors[plane],
+          planeIndex: plane
         })
       }
     }
@@ -150,12 +290,23 @@ function KnowledgeGraphScene() {
     <group ref={groupRef}>
       {/* Conexiones */}
       {connections.map((conn, i) => (
-        <Connection key={`conn-${i}`} start={conn.start} end={conn.end} color={conn.color} />
+        <Connection
+          key={`conn-${i}`}
+          start={conn.start}
+          end={conn.end}
+          color={conn.color}
+          index={i}
+        />
       ))}
 
       {/* Nodos */}
       {nodes.map((node, i) => (
-        <Node key={`node-${i}`} position={node.pos} color={node.color} />
+        <Node
+          key={`node-${i}`}
+          position={node.pos}
+          color={node.color}
+          planeIndex={node.planeIndex}
+        />
       ))}
     </group>
   )
