@@ -39,13 +39,35 @@ const Container = styled.div`
 
 const HeroSection = styled.section`
   padding: ${theme.spacing.xl} 0;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.xl};
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    flex-direction: column;
+    text-align: center;
+  }
+`
+
+const GraphColumn = styled.div`
+  flex: 0 0 45%;
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    flex: 1 1 100%;
+  }
+`
+
+const ContentColumn = styled.div`
+  flex: 1;
+  text-align: left;
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    text-align: center;
+  }
 `
 
 const Logo = styled(motion.div)`
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto ${theme.spacing.lg};
 `
 
 const MainTitle = styled(motion.h1)`
@@ -76,9 +98,14 @@ const Tagline = styled(motion.p)`
 const Subtitle = styled(motion.p)`
   font-size: 1.2rem;
   color: ${theme.colors.text.gray};
-  max-width: 800px;
-  margin: 0 auto ${theme.spacing.xl};
+  max-width: 600px;
+  margin-bottom: ${theme.spacing.xl};
   line-height: 1.7;
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    margin: 0 auto ${theme.spacing.xl};
+    max-width: 800px;
+  }
 `
 
 const FeaturesSection = styled.section`
@@ -608,39 +635,43 @@ export default function CortexPage() {
     <PageContainer>
       <Container>
         <HeroSection>
-          <Logo
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-          >
-            <KnowledgeGraph3D />
-          </Logo>
+          <GraphColumn>
+            <Logo
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            >
+              <KnowledgeGraph3D />
+            </Logo>
+          </GraphColumn>
 
-          <MainTitle
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            CORTEX
-          </MainTitle>
+          <ContentColumn>
+            <MainTitle
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              CORTEX
+            </MainTitle>
 
-          <Tagline
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Tu Sistema Operativo de Claridad
-          </Tagline>
+            <Tagline
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Tu Sistema Operativo de Claridad
+            </Tagline>
 
-          <Subtitle
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            Donde la creatividad, el análisis, la lógica sistémica, la energía y la narrativa
-            convergen para catalizar tu evolución. CORTEX armoniza tus 5 Planos de Consciencia
-            en simbiosis perfecta con Sophia, elevando cada decisión que tomas.
-          </Subtitle>
+            <Subtitle
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              Donde la creatividad, el análisis, la lógica sistémica, la energía y la narrativa
+              convergen para catalizar tu evolución. CORTEX armoniza tus 5 Planos de Consciencia
+              en simbiosis perfecta con Sophia, elevando cada decisión que tomas.
+            </Subtitle>
+          </ContentColumn>
         </HeroSection>
 
         <FeaturesSection>
