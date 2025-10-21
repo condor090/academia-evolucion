@@ -3,6 +3,26 @@ import styled from '@emotion/styled'
 import { motion, AnimatePresence } from 'framer-motion'
 import { theme } from '@/styles/theme'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+
+// Lazy load Three.js component for better performance
+const KnowledgeGraph3D = dynamic(
+  () => import('@/components/effects/KnowledgeGraph3D'),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{
+        width: '100%',
+        height: '300px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <p style={{ color: '#FFD700', fontSize: '3rem' }}>🧠</p>
+      </div>
+    )
+  }
+)
 
 const PageContainer = styled.div`
   width: 100%;
@@ -23,8 +43,9 @@ const HeroSection = styled.section`
 `
 
 const Logo = styled(motion.div)`
-  font-size: 4rem;
-  margin-bottom: ${theme.spacing.md};
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto ${theme.spacing.lg};
 `
 
 const MainTitle = styled(motion.h1)`
@@ -588,11 +609,11 @@ export default function CortexPage() {
       <Container>
         <HeroSection>
           <Logo
-            initial={{ opacity: 0, scale: 0.5 }}
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            🧠
+            <KnowledgeGraph3D />
           </Logo>
 
           <MainTitle
