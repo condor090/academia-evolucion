@@ -315,7 +315,7 @@ function KnowledgeGraphScene() {
 // Componente principal exportable
 export default function KnowledgeGraph3D() {
   return (
-    <div style={{ width: '100%', height: '300px', position: 'relative' }}>
+    <div style={{ width: '100%', height: '500px', position: 'relative' }}>
       <Canvas
         camera={{ position: [0, 2, 8], fov: 50 }}
         style={{ background: 'transparent' }}
