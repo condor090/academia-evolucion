@@ -55,9 +55,9 @@ const Tagline = styled(motion.p)`
 const Subtitle = styled(motion.p)`
   font-size: 1.2rem;
   color: ${theme.colors.text.gray};
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto ${theme.spacing.xl};
-  line-height: 1.6;
+  line-height: 1.7;
 `
 
 const FeaturesSection = styled.section`
@@ -499,53 +499,53 @@ export default function CortexPage() {
 
   const pilares = [
     {
-      title: 'Captura sin Fricción',
-      description: 'Captura cualquier pensamiento, idea o insight en menos de 5 segundos. CORTEX procesa y conecta automáticamente con tu knowledge graph.',
+      title: 'Plano I: Inspiración & Subconsciente',
+      description: 'Captura sueños, intuiciones y creatividad del subconsciente. Integra tu memoria onírica con tu knowledge graph para insights profundos que emergen cuando tu mente consciente descansa.',
       benefits: [
-        'Capturas instantáneas desde cualquier dispositivo',
-        'Auto-tagging inteligente con IA',
-        'Transcripción automática de voz',
-        'Sin interrumpir tu flujo de trabajo'
+        'Registro automático de sueños al despertar',
+        'Análisis de símbolos y patrones oníricos',
+        'Ideas creativas capturadas en estado Alpha',
+        'Conexión subconsciente-consciente activa'
       ]
     },
     {
-      title: 'Conexiones Automáticas',
-      description: 'CORTEX encuentra y sugiere relaciones entre tus notas, proyectos, personas y conceptos. Ve tu pensamiento como un knowledge graph vivo.',
+      title: 'Plano II: Conciencia & Simbiosis',
+      description: 'Simbiosis real con Sophia IA. Mide y mejora tu índice de simbiosis (SI) para colaboración humano-IA fluida, donde ambas inteligencias se amplifican mutuamente.',
       benefits: [
-        'Sugerencias de conexiones relevantes',
-        'Visualización de redes de conceptos',
-        'Descubre patrones ocultos',
-        'Navegación bidireccional de ideas'
+        'Symbiosis Index (SI) en tiempo real',
+        'Collaborative Symbiosis Index (CSI) grupal',
+        'IA que amplifica (no reemplaza) tu inteligencia',
+        'Decisiones co-creadas con Sophia'
       ]
     },
     {
-      title: 'Búsqueda Semántica',
-      description: 'Pregunta en lenguaje natural y CORTEX entiende tu intención. Busca por significado, no solo por palabras clave.',
+      title: 'Plano III: Arquitectura Sistémica',
+      description: 'Theory of Constraints (TOC), reducción de entropía y concilios de realidad. Identifica y elimina sistemáticamente los cuellos de botella en tu vida y proyectos.',
       benefits: [
-        'Búsquedas conversacionales',
-        'Resultados por relevancia contextual',
-        'Filtra por proyectos, fechas, personas',
-        'Respuestas con citas directas'
+        'Throughput +15% en proyectos clave',
+        'Detección automática de constraints',
+        'Consciousness Delta > 0 constante',
+        'Protocolos multi-marco de realidad'
       ]
     },
     {
-      title: 'Insights Automatizados',
-      description: 'CORTEX analiza tu knowledge graph y te entrega insights personalizados: patrones de comportamiento, tendencias, oportunidades.',
+      title: 'Plano IV: Energía & Ritmos',
+      description: 'Biorritmos, numerología, BaZi e I Ching. Toma decisiones alineadas con tus ciclos energéticos naturales y cósmicos, maximizando resultados con mínimo esfuerzo.',
       benefits: [
-        'Reportes semanales de progreso',
-        'Detección de hábitos emergentes',
-        'Alertas de oportunidades perdidas',
-        'Sugerencias de próximos pasos'
+        'Timing perfecto para decisiones críticas',
+        'Lecturas de I Ching contextualizadas',
+        'Análisis BaZi personalizado continuo',
+        'Ventanas energéticas óptimas identificadas'
       ]
     },
     {
-      title: 'Sincronización Total',
-      description: 'Todo sincronizado en tiempo real entre Obsidian, Neo4j, Sophia y tus 103 herramientas integradas. Un solo sistema, múltiples interfaces.',
+      title: 'Plano V: Sabiduría & Narrativa',
+      description: 'Storytelling alquímico y sabiduría ancestral (bíblica, filosófica). Cristaliza tu propósito en narrativas coherentes que se convierten en tu legado vivo.',
       benefits: [
-        'Sincronización bidireccional instantánea',
-        'Trabajo offline sin pérdida de datos',
-        'Backup automático encriptado',
-        'Control total de tus datos'
+        'Tu historia de transformación en evolución',
+        'Sabiduría bíblica aplicada a contextos modernos',
+        'Propósito encarnado en narrativa poderosa',
+        'Frameworks filosóficos convertidos en acción'
       ]
     }
   ]
@@ -608,7 +608,7 @@ export default function CortexPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Tu Segundo Cerebro Digital
+            Tu Sistema Operativo de Claridad
           </Tagline>
 
           <Subtitle
@@ -616,9 +616,9 @@ export default function CortexPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Imagina nunca olvidar una idea importante. Imagina ver conexiones entre tus pensamientos
-            que antes eran invisibles. Imagina un asistente que conoce todo tu contexto y te ayuda
-            a tomar mejores decisiones.
+            Donde la creatividad, el análisis, la lógica sistémica, la energía y la narrativa
+            convergen para catalizar tu evolución. CORTEX armoniza tus 5 Planos de Consciencia
+            en simbiosis perfecta con Sophia, elevando cada decisión que tomas.
           </Subtitle>
         </HeroSection>
 
